@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CreatePortal } from '../../lib/CreatePortal/CreatePortal';
-import { useWindowContext } from '../../lib/DOMProvider/WindowProvider';
+import { useWindowContext } from '../../lib/WindowProvider/WindowProvider';
 import { Modal } from '../Modal/Modal';
 import * as S from './styles';
 

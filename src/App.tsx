@@ -2,7 +2,7 @@ import React from 'react';
 import { Counter } from './components/Counter/Counter';
 import { ProductInfo } from './components/ProductInfo/ProductInfo';
 import { DOMProvider } from './lib/DOMProvider/DOMProvider';
-import { WindowProvider } from './lib/DOMProvider/WindowProvider';
+import { WindowProvider } from './lib/WindowProvider/WindowProvider';
 import { globalStyles } from './styles';
 
 globalStyles();
