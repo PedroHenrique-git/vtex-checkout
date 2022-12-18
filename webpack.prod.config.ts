@@ -8,7 +8,7 @@ const config: Configuration = {
   mode: 'production',
   entry: './src/main.tsx',
   output: {
-    path: path.resolve(__dirname, 'build'),
+    path: path.resolve(__dirname, 'checkout-ui-custom'),
     filename: 'checkout6-custom.js',
     publicPath: '',
   },
