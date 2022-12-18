@@ -125,10 +125,47 @@ interface Seller {
   name: string;
 }
 
+interface DeliveryWindow {
+  startDateUtc: string;
+  endDateUtc: string;
+  price: number;
+  tax: number;
+}
+
+interface Sla {
+  id: string;
+  name: string;
+  deliveryIds: Array<{
+    courierId: string;
+    warehouseId: string;
+    dockId: string;
+    courierName: string;
+    quantity: number;
+  }>;
+  shippingEstimate: string;
+  shippingEstimateData: string;
+  lockTTL: string | null;
+  availableDeliveryWindows: DeliveryWindow[];
+  deliveryWindow: DeliveryWindow;
+  price: number;
+  tax: number;
+}
+
+interface LogisticsInfo {
+  addressId: string;
+  itemId: string;
+  itemIndex: string;
+  selectedDeliveryChannel: string | null;
+  selectedSla: string | null;
+  shipsTo: string[];
+  slas: Sla[];
+}
+
 interface ShippingData {
   address: Address;
-  availableAddresses: Address;
-  selectedAddresses: Address;
+  availableAddresses: Address[];
+  selectedAddresses: Address[];
+  logisticsInfo: LogisticsInfo[];
 }
 
 interface StorePreferencesData {
