@@ -2,7 +2,7 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import path from 'path';
-import { Configuration as WebpackConfiguration } from 'webpack';
+import { Configuration as WebpackConfiguration, ProvidePlugin } from 'webpack';
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 
 interface Configuration extends WebpackConfiguration {
@@ -15,6 +15,9 @@ const config: Configuration = {
     path: path.resolve(__dirname, 'build'),
     filename: 'checkout6-custom.js',
     publicPath: '',
+  },
+  externals: {
+    jquery: 'jQuery',
   },
   entry: './src/main.tsx',
   module: {
@@ -44,6 +47,11 @@ const config: Configuration = {
     //}),
 
     //new HotModuleReplacementPlugin(),
+
+    new ProvidePlugin({
+      $: 'jquery',
+      jquery: 'jquery',
+    }),
 
     new ForkTsCheckerWebpackPlugin({
       async: false,

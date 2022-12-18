@@ -2,11 +2,14 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import path from 'path';
-import { Configuration } from 'webpack';
+import { Configuration, ProvidePlugin } from 'webpack';
 
 const config: Configuration = {
   mode: 'production',
   entry: './src/main.tsx',
+  externals: {
+    jquery: 'jQuery',
+  },
   output: {
     path: path.resolve(__dirname, 'checkout-ui-custom'),
     filename: 'checkout6-custom.js',
@@ -37,6 +40,11 @@ const config: Configuration = {
     //new HtmlWebpackPlugin({
     //template: "src/index.html",
     //}),
+
+    new ProvidePlugin({
+      $: 'jquery',
+      jquery: 'jquery',
+    }),
 
     new ForkTsCheckerWebpackPlugin({
       async: false,

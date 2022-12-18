@@ -4,17 +4,18 @@ type Hash = '#/cart' | '#/payment' | '#/email' | '#/shipping';
 
 interface WindowData {
   vtexjs: Vtexjs | null;
+  orderForm: OrderForm | null;
+  ajaxOptionsLastRequest: AjaxOptions | null;
   hash: Hash;
 }
 
-interface IWindowContext {
-  vtexjs: Vtexjs | null;
-  hash: Hash;
-}
+type IWindowContext = WindowData;
 
 const WindowContext = createContext<IWindowContext>({
   vtexjs: null,
   hash: window.location.hash as Hash,
+  ajaxOptionsLastRequest: null,
+  orderForm: null,
 });
 
 export const useWindowContext = () => {
@@ -30,6 +31,8 @@ export const useWindowContext = () => {
 export function WindowProvider({ children }: { children: React.ReactNode }) {
   const [windowData, setWindowData] = useState<WindowData>({
     vtexjs: null,
+    orderForm: null,
+    ajaxOptionsLastRequest: null,
     hash: window.location.hash as Hash,
   });
 
@@ -48,12 +51,52 @@ export function WindowProvider({ children }: { children: React.ReactNode }) {
       }));
     };
 
+    const cbOrderFormUpdated = (
+      _: JQuery.TriggeredEvent,
+      orderForm: OrderForm,
+    ) => {
+      setWindowData((prev) => ({
+        ...prev,
+        orderForm: orderForm,
+      }));
+    };
+
+    const cbCheckoutRequestBegin = (
+      _: JQuery.TriggeredEvent,
+      ajaxOptions: AjaxOptions,
+    ) => {
+      setWindowData((prev) => ({
+        ...prev,
+        ajaxOptionsLastRequest: ajaxOptions,
+      }));
+    };
+
+    const cbCheckoutRequestEnd = (
+      _: JQuery.TriggeredEvent,
+      orderForm: OrderForm,
+    ) => {
+      setWindowData((prev) => ({
+        ...prev,
+        orderForm: orderForm,
+      }));
+    };
+
     window.addEventListener('load', updateVtexJs);
     window.addEventListener('hashchange', updateHash);
 
+    // VTEX EVENTS
+    $(window).on('orderFormUpdated.vtex', cbOrderFormUpdated);
+    $(window).on('checkoutRequestEnd.vtex', cbCheckoutRequestEnd);
+    $(window).on('checkoutRequestBegin.vtex', cbCheckoutRequestBegin);
+
     return () => {
       window.removeEventListener('load', updateVtexJs);
-      window.addEventListener('hashchange', updateHash);
+      window.removeEventListener('hashchange', updateHash);
+
+      // VTEX EVENTS
+      $(window).off('orderFormUpdated.vtex');
+      $(window).off('checkoutRequestEnd.vtex');
+      $(window).off('checkoutRequestBegin.vtex');
     };
   }, []);
 
